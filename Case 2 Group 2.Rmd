@@ -1,0 +1,260 @@
+---
+title: "OPIM 5603 — Statistics in Business Analytics
+University of Connecticut -
+Case 2"
+author: "Group 2 (Jonathan, Eric, Anna, Rishank, Haoming)"
+date: "04/07/2024"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+#Introduction: The dynamics of the real estate market consist of numerous factors, ranging from the aspects of square footage and architectural style to the neighborhood charm. In Eastville, Connecticut, understanding the details of housing prices becomes important for homeowners, buyers, and real estate professionals alike. We are here to present the depths of Eastville's housing market, utilizing data-driven insights to understand the nature of property valuations.
+
+#Histograms, scatter plots, and boxplots offer precise insights into the distribution of housing prices, the relationships between variables, and the presence of outliers that may influence pricing dynamics. Through these visualizations, we were able to discover hidden correlations and dissect the underlying factors driving housing prices in Eastville.
+
+#Moving beyond descriptive statistics and graphical exploration, we are able to use predictive modeling, utilizing multiple linear regression to identify the predictors that most significantly influence property valuations. From square footage and architectural style to the presence of amenities like basements and fireplaces, each variable has an impact on housing prices. We seek to understand this intricate process of relationships that govern Eastville's housing market dynamics.
+
+#Architectural styles, the presence of basements, school districts, and the existence of fireplaces emerge as important points of analysis, offering insights for housing prices. Through our examination and statistical inference, we look to understand the influences that these factors have on property valuations in Eastville.
+
+```
+
+
+```{r}
+#Problem 1
+
+library(readxl)
+Housing_Data <- read_excel("C:/Users/jcree/Downloads/Housing Data.xlsx")
+View(Housing_Data)
+data.frame <- Housing_Data
+print(data.frame)
+
+numeric_summary <- sapply(Housing_Data[, c("sqft", "beds", "baths", "garage", "age", "price")], function(x) {
+  c(
+    mean = mean(x),
+    median = median(x),
+    sd = sd(x),
+    min = min(x),
+    max = max(x)
+  )
+})
+numeric_summary
+
+
+lm.housing_data <- lm(price ~ sqft, data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:  0.685
+
+
+
+lm.housing_data <- lm(price ~ beds, data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:  0.06443
+
+
+lm.housing_data <- lm(price ~ garage, data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:  0.3008
+
+lm.housing_data <- lm(price ~ age, data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:  0.1532
+
+lm.housing_data <- lm(price ~ fire, data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:  0.1164
+
+
+lm.housing_data <- lm(price ~ basement, data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:  0.07148
+
+
+lm.housing_data <- lm(price ~ baths, data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:  0.3147
+
+##overall schooling 
+lm.housing_data <- lm(price ~ school , data = Housing_Data)
+
+summary(lm.housing_data)
+
+##if its Plum Ridge school district
+lm.housing_data <- lm(price ~ school==0 , data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:0.1018
+
+##If its Apple valley district 
+lm.housing_data <- lm(price ~ school==1 , data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:0.1018
+
+##Unlike the style function the R squared value does not change based on the type of school you have. This signifies that the school  type does not significantly affect our price. 
+
+
+##Multiple R-squared:0.1018
+
+lm.housing_data <- lm(price ~ style , data = Housing_Data)
+
+summary(lm.housing_data)
+##Multiple R-squared:  0.1828
+
+
+lm.housing_data <- lm(price ~ style==1 , data = Housing_Data)
+
+summary(lm.housing_data)
+
+
+lm.housing_data <- lm(price ~ style==0, data = Housing_Data)
+
+summary(lm.housing_data)
+
+
+lm.housing_data <- lm(price ~ style==2 , data = Housing_Data)
+
+summary(lm.housing_data)
+
+##The R squared value for each style changes based on the style you choose . When you run the code you can see that the multiple R2 for cape cod style is  0.08044, for a two story house style is 0.0583 and for a ranch style is 0.2347. Based on this you can tell that the ranch style homes affect the price of the home more significantly than any other style. 
+
+
+##overall heat 
+lm.housing_data <- lm(price ~ heat , data = Housing_Data)
+
+summary(lm.housing_data)
+##Multiple R-squared:  0.007372
+
+##heat if its oil 
+
+##heat if its electric 
+lm.housing_data <- lm(price ~ heat==1 , data = Housing_Data)
+
+summary(lm.housing_data)
+##Multiple R-squared:  0.007372
+
+lm.housing_data <- lm(price ~ heat==0 , data = Housing_Data)
+
+summary(lm.housing_data)
+
+##Multiple R-squared:  0.007372
+
+##Unlike the style function the R squared value does not change based on the type of heat you have. This signifies that the heat type does not significantly affect our price. 
+##Overall summary: The R squared value in multiple linear regression helps show us how individual variables affect the dependent variable. By utilizing the lm function noted above we can find the individual values of all the variables. Based on this analysis you can see that the amount of square feet affects the price the most followed by the number of baths and if it has a garage. The variable that affects the price the least is the heat. Due to this we know that as a realtor you should base your asking price off of how much square feet there is or how many baths they are. You can ask for a higher price if either of these values are on the higher side. 
+
+
+```
+
+```{r}
+# Problem 2:
+# 2a Histogram of selling price
+hist(Housing_Data$price, main = "Histogram of Selling Price", xlab = "Price (thousands of dollars)", col = "lightblue")
+
+# 2b Scatter plot of square feet vs. selling price
+plot(Housing_Data$sqft, Housing_Data$price, main = "Square Feet vs. Selling Price", xlab = "Square Feet", ylab = "Price (thousands of dollars)", col = "blue", pch = 16)
+
+# 2c Boxplot of selling price by school district
+boxplot(price ~ school, data = Housing_Data, main = "Selling Price by School District", xlab = "School District", ylab = "Price (thousands of dollars)", col = c("lightblue", "lightgreen"))
+
+
+# 2d Scatter plot matrix for multiple variables
+pairs(~price + sqft + beds + baths + age, data = Housing_Data, main = "Scatter Plot Matrix")
+
+#Explanation for the graphs:
+# 2a. Histogram of selling price: Shows the distribution of selling prices, helps understand the range and distribution of prices.
+# 2b. Scatter plot of square feet vs. selling price: Helps visualize the relationship between square feet and selling price, useful for understanding the pricing pattern.
+# 2c. Boxplot of selling price by school district: Compares the distribution of selling prices between different school districts, helps identify any differences in pricing.
+# 2d. Scatter plot matrix: Provides a matrix of scatter plots for multiple variables, helps identify correlations between variables.
+
+```
+
+
+```{r}
+#Problem 3 
+
+View(Housing_Data)
+model <- lm(price ~ sqft + beds + baths + heat + style + garage + basement + age + fire + school, data=Housing_Data)
+summary(model)
+
+#The model that best predicts the sales price is a Multiple linear regression model. The model summary supports this. The Multiple R-squared value indicates that approximately 82.56% of the variation in house prices is explained by the model. This is a relatively high value, suggesting that the model fits the data well. We can also look at The F-test checks if at least one predictor variable has a non-zero coefficient. A very low p-value (< 2.2e-16) indicates that the model is statistically significant at predicting house prices. The adjusted R squared, a value of 80.76% is also high, indicating a good fit. This is all shown in the model summary. 
+
+#Sqft is highly significant p < 2e-16). It suggests that for every additional square foot, the price increases by approximately $37.60 (since the price is in thousands of dollars). The garage is very significant(p < 0.0001). Each additional garage space increases the price by about $15,759.33. Age is also Highly significant (p = 0.000389). For each additional year of age, the price decreases by about $1,034.17. Basement is also significant, along with beds, and heat (Switching from oil to electric heat).
+
+#Baths, Style, Fire, and School are variables that have p-values greater than the 0.05 threshold, suggesting they are not statistically significant predictors of house price in this model. School is on the edge of significance though (p = 0.071267), so it could have a predictive value in a different model or with more data. 
+
+```
+
+```{r}
+#Problem 4 
+
+# Analysis of variance for architectural styles
+anova_model_style <- aov(price ~ factor(style), data=Housing_Data)
+summary(anova_model_style) 
+
+#Based on the ANOVA analysis, yes. There is a statistically significant difference in the selling prices of houses based on their architectural styles. This conclusion is drawn from the p-value associated with the factor(style) in the ANOVA analysis, which is extremely low (7.64e-07, far below the common significance threshold of 0.05). This indicates that at least one architectural style's average selling price significantly differs from the others.
+
+```
+
+
+```{r}
+#Problem 5
+
+Base_model <- lm(price ~ sqft + beds + baths + heat + style + garage + basement + age + fire + school, data=Housing_Data)
+summary(Base_model)
+
+#(basement p-value 0.09807, Multiple R-Squared 0.8256, Adjusted R-Squared 0.8076, F-statistic 45.91 on 10 and 97 DF)
+
+No_base_model <-  lm(price ~ sqft + beds + baths + heat + style + garage + age + fire + school, data=Housing_Data)
+summary (No_base_model)
+
+#(multiple R-Squared 0.8131, Adjusted R-Squared 0.7959, F-statistic 47.37 on 9 and 98 DF)
+
+#We can see that in the model including the basement predictor, its predictor p-value is relatively low on 0.01 scale (R gives a two-star mark to indicate its significance), which means basement is a relatively important and necessary predictor in predicting selling price of the property. This idea can be backed up from the summary of the model without a basement predictor. Both multiple r-squared and adjusted r-squared decreased compared to the previous model, meaning less determination of the dependent variable with respect to independent variables. In conclusion, the basement predictor acts as a positive contribution to the selling price. 
+
+```
+
+
+```{r}
+#Problem 6
+
+Fire_model <- lm(price ~ sqft + beds + baths + heat + style + garage + basement + age + fire + school, data=Housing_Data)
+summary(Fire_model)
+
+#(fireplace p-value 0.185589, Multiple R-Squared 0.8256, Adjusted R-Squared 0.8076, F-statistic 45.91 on 10 and 97 DF)
+
+No_fire_model <- lm(price ~ sqft + beds + baths + heat + style + garage + basement + age + school, data=Housing_Data)
+summary(No_fire_model)
+
+#(Multiple R-Squared 0.8224, Adjusted R-Squared 0.8061, F-statistic 50.41 on 9 and 98 DF)
+
+#The fireplace variable does not have significant predictive power towards the selling price due to the statistical comparison of the two models with and without it. The p-value for the fireplace variable in the first model is 0.185589, a relatively high value suggesting that it may not be a reliable predictor of price prediction. When we remove the fireplace variable, the second model still presents with almost identical model performance with only 0.32 difference in multiple r-squared, 0.15 in adjusted r-squared, and 4.5 in f-statistic. Overall, it is safe to say that the fireplace variable is a relatively neutral predictor in predicting selling price.
+
+```
+
+
+```{r}
+#Summary: Through this case we are able to determine that prioritizing factors like square footage and garage space is important when looking at key aspects of selling a house. Leveraging architectural styles that command higher prices could also help with these returns. We strongly urge caution when considering variables with limited predictive value, such as the presence of a fireplace or specific school districts. Overall, this analysis equips individuals with valuable insights to navigate Eastville's dynamic real estate landscape effectively, prioritizing pricing strategies for asking prices on houses. The model showed an impressive Multiple R-squared value of 82.56%, indicating strong correlation between predictors and house prices. Significant predictors such as square footage, garage space, and property age showed an importance in determining property values, with each additional square foot contributing approximately $37.60 to the price. Variables like architectural style, presence of a fireplace, and specific school districts show limited predictive value, suggesting minimal impact on property valuations.
+
+#ANOVA analysis revealed significant differences in selling prices based on architectural styles, reiterating this importance of considering design aesthetics in pricing strategies. Model comparisons highlight the significance of certain predictors, such as basement presence, in influencing property prices. For example, including the basement predictor benefits the model's predictive power. Variables like the presence of a fireplace demonstrate limited predictive power, indicating their negligible impact on property prices.
+
+```
+
